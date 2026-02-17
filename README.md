@@ -1,4 +1,4 @@
-## Usefull commands
+# Usefull commands
 
-# Capture and print the first 2 ICMP packets
+### Capture and print the first 2 ICMP packets
 ```sudo tshark -c 2 -V -Y 'icmp'```
