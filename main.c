@@ -6,56 +6,72 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 12:50:01 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/17 16:16:55 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/17 18:33:16 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-int main(int argc, char const* argv[])
+unsigned short checksum(void *b, int len)
 {
-    (void)argc;
-    (void)argv;
-    int status, valread, client_fd;
-    struct sockaddr_in serv_addr;
-    char* hello = "Hello from client";
-    char buffer[1024] = { 0 };
-    if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        printf("\n Socket creation error \n");
-        return -1;
-    }
+	unsigned short *buf = b;
+	unsigned int sum = 0;
+	unsigned short result;
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(DEFAULT_PORT);
+	for (sum = 0; len > 1; len -= 2)
+		sum += *buf++;
+	if (len == 1)
+		sum += *(unsigned char*)buf;
+	sum = (sum >> 16) + (sum & 0xFFFF);
+	sum += (sum >> 16);
+	result = ~sum;
+	return result;
+}
 
-    // Convert IPv4 and IPv6 addresses from text to binary
-    // form
-    if (inet_pton(AF_INET, "142.251.39.206", &serv_addr.sin_addr)
-        <= 0) {
-        printf(
-            "\nInvalid address/ Address not supported \n");
-        return -1;
-    }
+int main(int argc, char **argv)
+{
+	if (argc == 1) {
+		printf("ft_ping: missing host operand\n");
+		printf("Try 'ft_ping -?' for more information\n");
+		return 64;
+	}
 
-    if ((status
-         = connect(client_fd, (struct sockaddr*)&serv_addr,
-                   sizeof(serv_addr)))
-        < 0) {
-        printf("\nConnection Failed \n");
-        return -1;
-    }
-    (void)status;
-  
-    // subtract 1 for the null
-    // terminator at the end
-    send(client_fd, hello, strlen(hello), 0);
-    printf("Hello message sent\n");
-    valread = read(client_fd, buffer,
-                   1024 - 1);
-    printf("%s\n", buffer);
-    printf("valread = %d\n", valread);
+	struct addrinfo hints = {0}, *res;
+	hints.ai_family = AF_INET;
 
-    // closing the connected socket
-    close(client_fd);
-    return 0;
+	if (getaddrinfo(argv[1], NULL, &hints, &res) != 0)
+	{
+		perror("getaddrinfo");
+		return 1;
+	}
+
+	int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+	if (sockfd < 0)
+	{
+		perror("socket");
+		return 1;
+	}
+
+	char packet[PACKET_SIZE];
+	struct icmphdr *icmp = (struct icmphdr *)packet;
+
+	icmp->type = ICMP_ECHO;
+	icmp->code = 0;
+	icmp->un.echo.id = getpid();
+	icmp->un.echo.sequence = 1;
+	icmp->checksum = 0;
+	icmp->checksum = checksum(packet, PACKET_SIZE);
+
+	if (sendto(sockfd, packet, PACKET_SIZE, 0,
+		res->ai_addr, res->ai_addrlen) <= 0)
+	{
+		perror("sendto");
+		return 1;
+	}
+
+	printf("Ping sent\n");
+
+	freeaddrinfo(res);
+	close(sockfd);
+	return 0;
 }
