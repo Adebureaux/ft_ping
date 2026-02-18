@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   checksum.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/17 14:14:10 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/17 18:25:46 by adeburea         ###   ########.fr       */
+/*   Created: 2026/02/18 12:34:15 by adeburea          #+#    #+#             */
+/*   Updated: 2026/02/18 12:34:40 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/ip_icmp.h>
-#include <netdb.h>
-#include <sys/time.h>
+#include "../include/ft_ping.h"
 
-#define DEFAULT_PORT 80
-#define PACKET_SIZE 64
-
-typedef struct s_ft_ping
+unsigned short checksum(void *b, int len)
 {
-	
-}	t_ft_ping;
+	unsigned short *buf = b;
+	unsigned int sum = 0;
+	unsigned short result;
 
-#endif
+	for (sum = 0; len > 1; len -= 2)
+		sum += *buf++;
+	if (len == 1)
+		sum += *(unsigned char*)buf;
+	sum = (sum >> 16) + (sum & 0xFFFF);
+	sum += (sum >> 16);
+	result = ~sum;
+	return result;
+}

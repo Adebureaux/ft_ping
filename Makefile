@@ -6,7 +6,7 @@
 #    By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/17 17:01:43 by adeburea          #+#    #+#              #
-#    Updated: 2026/02/17 18:25:09 by adeburea         ###   ########.fr        #
+#    Updated: 2026/02/18 12:38:35 by adeburea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,25 +15,26 @@
 
 CC		=	gcc
 NAME	=	ft_ping
-FLAGS	=	-Wall -Wextra -Werror -g
-INC		=	ft_ping.h
-OBJ		=	objs
-OBJS	=	$(addprefix $(OBJ)/, $(SRCS:.c=.o))
-SRCS 	=	main.c
+FLAGS	=	-Wall -Wextra -Werror
+INC		=	-I./include
+OBJ_DIR	=	obj
 
-$(NAME): $(LIBFT) $(OBJ) $(OBJS)
-	$(CC) $(FLAGS) -o $(NAME) $(OBJS)
+SRC 	=	src/main.c \
+			src/checksum.c
 
-$(OBJ):
-	@mkdir -p $(OBJ)
+OBJ	=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
 
-$(OBJ)/%.o: ./%.c
-	$(CC) $(FLAGS) -c $< -o $@
+$(NAME): $(OBJ)
+	$(CC) $(FLAGS) -o $(NAME) $(OBJ)
+
+$(OBJ_DIR)/%.o: src/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(FLAGS) $(INC) -c $< -o $@
 
 all: $(NAME)
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)

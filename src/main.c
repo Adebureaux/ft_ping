@@ -6,29 +6,13 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 12:50:01 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/17 18:33:16 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/18 14:36:10 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "../include/ft_ping.h"
 
-unsigned short checksum(void *b, int len)
-{
-	unsigned short *buf = b;
-	unsigned int sum = 0;
-	unsigned short result;
-
-	for (sum = 0; len > 1; len -= 2)
-		sum += *buf++;
-	if (len == 1)
-		sum += *(unsigned char*)buf;
-	sum = (sum >> 16) + (sum & 0xFFFF);
-	sum += (sum >> 16);
-	result = ~sum;
-	return result;
-}
-
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 	if (argc == 1) {
 		printf("ft_ping: missing host operand\n");
@@ -68,6 +52,22 @@ int main(int argc, char **argv)
 		perror("sendto");
 		return 1;
 	}
+
+    char buff[1024];
+
+
+// ssize_t sendto(int sockfd, const void *buf, size_t len, int flags,
+//                const struct sockaddr *dest_addr, socklen_t addrlen);
+
+// ssize_t recvfrom(int s, void *buf, size_t len, int flags,
+//                  struct sockaddr *from, socklen_t *fromlen);
+
+    int ret = recvfrom(sockfd, buff, PACKET_SIZE, 0, res->ai_addr, &res->ai_addrlen);
+
+
+
+    printf("%d\n", ret);
+    // printf(buff);
 
 	printf("Ping sent\n");
 
