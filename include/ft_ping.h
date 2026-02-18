@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 14:14:10 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/18 12:35:20 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/18 17:27:58 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 # define DEFAULT_PORT 80
 # define PACKET_SIZE 64
+# define DATA_SIZE 56
 
 typedef struct s_ft_ping
 {
