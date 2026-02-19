@@ -6,7 +6,7 @@
 #    By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/17 17:01:43 by adeburea          #+#    #+#              #
-#    Updated: 2026/02/18 12:38:35 by adeburea         ###   ########.fr        #
+#    Updated: 2026/02/19 17:58:54 by adeburea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,17 @@ INC		=	-I./include
 OBJ_DIR	=	obj
 
 SRC 	=	src/main.c \
-			src/checksum.c
+			src/socket.c \
+			src/icmp.c \
+			src/display.c \
+			src/checksum.c \
+			src/signal.c \
+			src/ping_loop.c \
+			src/stats.c \
+			src/time.c
 
-OBJ	=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
+
+OBJ	=	$(SRC:src/%.c=$(OBJ_DIR)/%.o) -lm
 
 $(NAME): $(OBJ)
 	$(CC) $(FLAGS) -o $(NAME) $(OBJ)

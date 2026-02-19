@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 14:14:10 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/18 17:27:58 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/19 18:15:57 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,37 @@
 # include <netinet/ip_icmp.h>
 # include <netdb.h>
 # include <sys/time.h>
+# include <signal.h>
+# include <errno.h>
+# include <math.h>
 
-# define DEFAULT_PORT 80
 # define PACKET_SIZE 64
 # define DATA_SIZE 56
+# define BUFFER_SIZE 1024
 
-typedef struct s_ft_ping
+extern volatile sig_atomic_t g_running;
+
+typedef struct s_stats
 {
-	
-}	t_ft_ping;
+    int     transmitted;
+    int     received;
+    double  min_rtt;
+    double  max_rtt;
+    double  total_rtt;
+    double  total_rtt_sq;
+}   t_stats;
 
-unsigned short checksum(void *b, int len);
+void            init_stats(t_stats *stats);
+void            update_stats(t_stats *stats, double rtt);
+void            print_stats(t_stats *stats, char *host);
+int             create_socket(void);
+int             resolve_host(char *host, struct addrinfo **res, char *ip_str);
+void            print_ping_header(char *host, char *ip_str);
+unsigned short  checksum(void *b, int len);
+double          time_diff(struct timeval start, struct timeval end);
+void            build_packet(char *packet, int seq);
+int             wait_for_reply(int sockfd, int seq, char *recv_packet);
+void            ping_loop(int sockfd, struct addrinfo *res, char *ip_str, char *host);
+void            init_signals(void);
 
 #endif
