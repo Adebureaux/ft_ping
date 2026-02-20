@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:03:49 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/19 18:24:45 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/20 13:53:40 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void build_packet(char *packet, int seq)
     icmp->checksum = checksum(packet, PACKET_SIZE);
 }
 
-int wait_for_reply(int sockfd, int seq, char *recv_packet)
+int wait_for_reply(int sockfd, char *recv_packet)
 {
     fd_set readfds;
     struct timeval timeout;
@@ -50,23 +50,27 @@ int wait_for_reply(int sockfd, int seq, char *recv_packet)
     if (ret == 0)
         return (-1);
 
-    ssize_t size = recvfrom(sockfd, recv_packet, BUFFER_SIZE, 0, NULL, NULL);
-
-    if (size <= 0)
-        return (-1);
-
-    struct iphdr *ip = (struct iphdr *)recv_packet;
-
-    if (ip->ihl < 5)
-        return (-1);
-
-    struct icmphdr *icmp = (struct icmphdr *)(recv_packet + ip->ihl * 4);
-
-    if (icmp->type == ICMP_ECHOREPLY &&
-        icmp->un.echo.id == getpid() &&
-        icmp->un.echo.sequence == seq)
+    while (1)
     {
-        return (0);
+        ssize_t size = recvfrom(sockfd, recv_packet, BUFFER_SIZE,
+                                MSG_DONTWAIT, NULL, NULL);
+
+        if (size <= 0)
+            break;
+
+        struct iphdr *ip = (struct iphdr *)recv_packet;
+
+        if (ip->ihl < 5)
+            continue;
+
+        struct icmphdr *icmp =
+            (struct icmphdr *)(recv_packet + ip->ihl * 4);
+
+        if (icmp->type == ICMP_ECHOREPLY &&
+            icmp->un.echo.id == (getpid() & 0xFFFF))
+        {
+            return (icmp->un.echo.sequence);
+        }
     }
 
     return (-1);

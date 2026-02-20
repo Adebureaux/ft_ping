@@ -6,7 +6,7 @@
 #    By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/17 17:01:43 by adeburea          #+#    #+#              #
-#    Updated: 2026/02/19 17:58:54 by adeburea         ###   ########.fr        #
+#    Updated: 2026/02/20 13:34:06 by adeburea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,7 @@ SRC 	=	src/main.c \
 			src/checksum.c \
 			src/signal.c \
 			src/ping_loop.c \
-			src/stats.c \
-			src/time.c
+			src/stats.c
 
 
 OBJ	=	$(SRC:src/%.c=$(OBJ_DIR)/%.o) -lm

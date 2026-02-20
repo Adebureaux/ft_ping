@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:08:05 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/19 18:13:18 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/20 13:52:17 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,14 @@ int create_socket(void)
         return (-1);
     }
 
-    // struct timeval tv = {1, 0};
-    // setsockopt(sockfd, IPPROTO_IP, SO_RCVTIMEO, &tv, sizeof(tv));
-
-    // int ttl = 42;
-    // setsockopt(sockfd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
-    
+    int broadcast = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST,
+                   &broadcast, sizeof(broadcast)) < 0)
+    {
+        perror("setsockopt SO_BROADCAST");
+        close(sockfd);
+        return (-1);
+    }
 
     return sockfd;
 }
