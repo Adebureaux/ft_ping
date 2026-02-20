@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:46:30 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/20 14:33:38 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:04:51 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ int send_loop(int sockfd,
         }
 
         next_send->tv_sec += 1;
-        return 1;
+        return (1);
     }
 
-    return 0;
+    return (0);
 }
 
 void recv_loop(int sockfd,
@@ -146,7 +146,7 @@ void recv_loop(int sockfd,
         {
             ssize_t icmp_size = size - ip->ihl * 4;
             printf("%zd bytes from %s: Destination Net Unreachable\n",
-                icmp_size, inet_ntoa(*(struct in_addr*)&ip->saddr));
+                   icmp_size, inet_ntoa(*(struct in_addr *)&ip->saddr));
         }
     }
 }

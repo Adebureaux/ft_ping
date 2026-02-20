@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:08:05 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/20 13:52:17 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:06:12 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int create_socket(void)
         return (-1);
     }
 
-    return sockfd;
+    return (sockfd);
 }
 
 int resolve_host(char *host, struct addrinfo **res, char *ip_str)

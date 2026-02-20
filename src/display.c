@@ -6,18 +6,38 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:46:54 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/20 11:39:00 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/02/20 15:55:48 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_ping.h"
 
-void print_ping_header(char *host, char *ip_str)
+void print_usage(void)
 {
-    printf("PING %s (%s): %d data bytes\n",
-        host,
-        ip_str,
-        DATA_SIZE);
+    printf("Usage: ft_ping [OPTION...] HOST\n");
+    printf("Options:\n");
+    printf("  -v     verbose output\n");
+    printf("  -?     display this help and exit\n");
+}
+
+void print_ping_header(char *host, char *ip_str, int v)
+{
+    if (v)
+    {
+        printf("PING %s (%s): %d data bytes, id 0x%x = %d\n",
+               host,
+               ip_str,
+               DATA_SIZE,
+               getpid() & 0xFFFF,
+               getpid() & 0xFFFF);
+    }
+    else
+    {
+        printf("PING %s (%s): %d data bytes\n",
+               host,
+               ip_str,
+               DATA_SIZE);
+    }
 }
 
 void print_ping(int size, char *ip_str, int seq, uint8_t ttl, double rtt)
