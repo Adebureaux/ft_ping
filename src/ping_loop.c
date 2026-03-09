@@ -6,13 +6,13 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:46:30 by adeburea          #+#    #+#             */
-/*   Updated: 2026/02/20 16:04:51 by adeburea         ###   ########.fr       */
+/*   Updated: 2026/03/09 18:32:04 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ft_ping.h"
 
-int send_loop(int sockfd,
+int send_ping(int sockfd,
               struct addrinfo *res,
               int *seq,
               struct timespec *send_times,
@@ -168,7 +168,7 @@ void ping_loop(int sockfd,
 
     while (g_running)
     {
-        send_loop(sockfd,
+        send_ping(sockfd,
                   res,
                   &seq,
                   send_times,
